@@ -41,23 +41,26 @@ const STATUS_STYLES = {
 export function FixtureCard({ fixture }: FixtureCardProps) {
   const router = useRouter();
 
-  const { homeTeam, awayTeam, momentumContrast, kickoffTime, finished, started, homeScore, awayScore } = fixture;
-  const { homeScore: homeMomentum, awayScore: awayMomentum } = momentumContrast;
+  const { homeTeam, awayTeam, kickoffTime, finished, started, homeScore, awayScore } = fixture;
 
-  // Use canonical resolver
+  // Use canonical resolver which handles nulls properly
   const narrative = resolveFixtureNarrative(fixture);
   const formattedKickoff = formatKickoff(kickoffTime);
   const tagStyle = getTagStyles(narrative.primary);
+
+  // Use momentum from narrative result (safely handles null)
+  const homeMomentum = narrative.homeScore ?? 0;
+  const awayMomentum = narrative.awayScore ?? 0;
 
   // Determine status
   const status = finished ? "finished" : started ? "live" : "upcoming";
   const statusStyle = STATUS_STYLES[status];
   const statusLabel = finished ? "FT" : started ? "LIVE" : "Upcoming";
 
-  // Delta text
+  // Delta text - use narrative result
   const deltaText =
-    narrative.leader === "level"
-      ? "Level"
+    narrative.leader === "level" || narrative.leader === "unknown"
+      ? narrative.leader === "unknown" ? "Data pending" : "Level"
       : `Δ +${narrative.delta} ${narrative.leader === "home" ? "Home" : "Away"}`;
 
   const handleClick = useCallback(() => {

@@ -79,15 +79,23 @@ export async function GET(
       resolvedEvent = undefined;
     }
 
-    // Normalize teams for momentum data
-    const teams = normalizeTeams(bootstrapResult.data, fixturesResult.data);
+    // CRITICAL: Fetch ALL fixtures for momentum calculation (includes finished games)
+    // This is needed because momentum is computed from past results, not future games
+    const allFixturesResult = await fetchFixtures(undefined, isMatchdayNow);
+    
+    // Normalize teams using ALL fixtures (so momentum is computed from finished games)
+    const teams = normalizeTeams(bootstrapResult.data, allFixturesResult.data);
 
-    // Normalize fixtures with momentum + narrative (filter null kickoff for display)
+    // Normalize the GW-specific fixtures with the correctly computed team momentum
     const fixtures = normalizeFixtures(fixturesResult.data, teams, true);
 
     // DEV-ONLY: Check for suspicious low diff distribution
     if (process.env.NODE_ENV !== "production" && fixtures.length > 0) {
-      const diffs = fixtures.map((f) => Math.abs(f.momentumContrast.homeScore - f.momentumContrast.awayScore));
+      const diffs = fixtures.map((f) => {
+        const home = f.momentumContrast.homeScore ?? 0;
+        const away = f.momentumContrast.awayScore ?? 0;
+        return Math.abs(home - away);
+      });
       const lowDiffCount = diffs.filter((d) => d <= 3).length;
       const lowDiffPercent = (lowDiffCount / diffs.length) * 100;
       
@@ -101,9 +109,11 @@ export async function GET(
       
       // Log diff distribution for debugging
       console.log(
-        `[Matchday] Diff distribution: ${fixtures.slice(0, 5).map((f) => 
-          `${f.homeTeam.shortName} vs ${f.awayTeam.shortName}: ${f.momentumContrast.homeScore}-${f.momentumContrast.awayScore} (Δ${Math.abs(f.momentumContrast.homeScore - f.momentumContrast.awayScore)})`
-        ).join("\n  ")}`
+        `[Matchday] Diff distribution: ${fixtures.slice(0, 5).map((f) => {
+          const home = f.momentumContrast.homeScore ?? 0;
+          const away = f.momentumContrast.awayScore ?? 0;
+          return `${f.homeTeam.shortName} vs ${f.awayTeam.shortName}: ${home}-${away} (Δ${Math.abs(home - away)})`;
+        }).join("\n  ")}`
       );
     }
 
