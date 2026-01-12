@@ -1,0 +1,8 @@
+# Apex PL — Environment Variables
+
+# Upstash Redis (required for caching)
+UPSTASH_REDIS_REST_URL=your_upstash_redis_rest_url
+UPSTASH_REDIS_REST_TOKEN=
+
+# Optional: Override API base URL for local testing
+# NEXT_PUBLIC_API_URL=http://localhost:3000/api

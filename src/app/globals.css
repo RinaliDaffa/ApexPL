@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Core colors */
+  --bg-0: #120024;
+  --bg-1: #1A0033;
+  --bg-2: #24004A;
+  --pl-purple: #38003C;
+  --accent-mint: #00FF87;
+  --highlight-pink: #FF005A;
+
+  /* Status colors */
+  --status-hot: #FF005A;
+  --status-rising: #00FF87;
+  --status-cooling: #A082FF;
+  --status-unstable: #FFD75A;
+
+  /* Text */
+  --text-strong: #FFFFFF;
+  --text: rgba(255,255,255,0.86);
+  --text-muted: rgba(255,255,255,0.62);
+  --text-faint: rgba(255,255,255,0.46);
+
+  /* Borders */
+  --border-subtle: rgba(255,255,255,0.08);
+  --border-card-inner: rgba(255,255,255,0.06);
+  --divider: rgba(255,255,255,0.10);
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-bg-0 text-text font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  *:focus-visible {
+    @apply outline-none ring-2 ring-accent-mint ring-offset-2 ring-offset-bg-0;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-bg-1 rounded-card border border-border-card-inner shadow-card;
+    @apply transition-all duration-200 ease-out;
+  }
+  .card:hover {
+    @apply bg-bg-2 shadow-hover;
+  }
+  .chip {
+    @apply inline-flex items-center px-3 py-1 rounded-chip;
+    @apply bg-white/10 border border-border-subtle text-xs text-text-strong;
+  }
+  .skeleton {
+    @apply bg-skeleton-bg rounded-card;
+    background: linear-gradient(90deg, rgba(255,255,255,0.06) 25%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.06) 75%);
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+  .container-apex {
+    @apply mx-auto max-w-content px-4 md:px-6 lg:px-8;
+  }
+}
+
+/* Shimmer animation keyframes */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
