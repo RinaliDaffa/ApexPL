@@ -15,4 +15,5 @@ export * from "./GWSwitcher";
 export * from "./GlobalPlayerCard";
 export * from "./PlayerInsightCard";
 export * from "./TopNav";
+export * from "./MetricRadarSvg";
 // Export everything explicitly to avoid issues
