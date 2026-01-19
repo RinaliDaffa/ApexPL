@@ -17,7 +17,7 @@ import { getTeamIdentity } from "@/lib/teamDirectory";
 
 export default function HomePage() {
   // SINGLE SOURCE OF TRUTH: The team grid data is the ranking.
-  const { data: teamData, isLoading, isError, error } = useTeams();
+  const { data: teamData, isLoading, isError } = useTeams();
   if (teamData) {
       console.log("REAL TEAM IDS:", teamData.data.map(t => `${t.id}:${t.shortName}`));
   }
