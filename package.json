@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "powershell -Command \"Get-Process -Id (Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue).OwningProcess -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue; next dev\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -14,7 +15,7 @@
     "@upstash/redis": "^1.28.0",
     "framer-motion": "^10.18.0",
     "lucide-react": "^0.303.0",
-    "next": "14.0.4",
+    "next": "14.2.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recharts": "^2.10.3",
@@ -28,12 +29,12 @@
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.56.0",
-    "eslint-config-next": "14.0.4",
+    "eslint-config-next": "14.2.21",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.3.3"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   }
 }

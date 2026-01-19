@@ -192,7 +192,9 @@ export function FixtureDetailPanel({
   if (!fixture) return null;
 
   const { homeTeam, awayTeam, momentumContrast, kickoffTime } = fixture;
-  const { homeScore, awayScore } = momentumContrast;
+  // Handle null momentum scores (default to 0)
+  const homeScore = momentumContrast.homeScore ?? 0;
+  const awayScore = momentumContrast.awayScore ?? 0;
   const narrativeTag = deriveNarrativeTag(homeScore, awayScore);
   const whatToWatch = deriveWhatToWatch(homeScore, awayScore, narrativeTag);
   const chips = deriveChips(homeScore, awayScore);

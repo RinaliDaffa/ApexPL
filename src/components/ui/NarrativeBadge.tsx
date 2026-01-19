@@ -29,6 +29,16 @@ const BADGE_STYLES: Record<MomentumLabel, { bg: string; text: string; glow: stri
     text: "text-status-unstable",
     glow: "shadow-[0_0_12px_rgba(255,215,90,0.3)]",
   },
+  "Watchlist": {
+    bg: "bg-white/10",
+    text: "text-text-muted",
+    glow: "",
+  },
+  "Stable": {
+    bg: "bg-white/10",
+    text: "text-text-muted",
+    glow: "",
+  },
 };
 
 const DEFAULT_STYLE = {

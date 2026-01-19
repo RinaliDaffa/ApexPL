@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+// framer-motion removed - not used in this component
 import { TeamNormalized } from "@/lib/types";
 import { getTeamIdentity } from "@/lib/teamDirectory";
 import { assertTeamIdentity } from "@/lib/devAssert";
