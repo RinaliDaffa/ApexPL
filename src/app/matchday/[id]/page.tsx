@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { fetchBootstrap, fetchFixtures } from "@/lib/server/fpl-client";
 import { normalizeTeams, normalizePlayers, normalizeFixtures } from "@/lib/server/normalize";
-import type { FixtureNormalized, PlayerNormalized, TeamNormalized } from "@/lib/types";
+import type { PlayerNormalized, TeamNormalized } from "@/lib/types";
 import { resolveFixtureNarrative, getTagStyles } from "@/lib/fixtureNarrative";
 import { MatchDetailClient } from "./client";
 import { TeamCrest } from "@/components/ui";
