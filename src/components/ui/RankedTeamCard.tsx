@@ -7,11 +7,13 @@ import type { TeamNormalized, TrendDirection } from "@/lib/types";
 import { NarrativeBadge } from "./NarrativeBadge";
 import { Sparkline } from "./Sparkline";
 import { ChipList } from "./ChipList";
+import { TeamCrest } from "./TeamCrest";
 import { generateTeaser } from "@/lib/teaser";
 
 interface RankedTeamCardProps {
   team: TeamNormalized;
   rank: number;
+  maxChips?: number;
 }
 
 function getVolatility(lastN: number[]): { level: "Low" | "Medium" | "High"; bars: number; subtext: string } {
@@ -61,7 +63,7 @@ function VolatilityBars({ bars }: { bars: number }) {
   );
 }
 
-export function RankedTeamCard({ team, rank }: RankedTeamCardProps) {
+export function RankedTeamCard({ team, rank, maxChips = 2 }: RankedTeamCardProps) {
   const router = useRouter();
   const [isExpanded, setIsExpanded] = useState(false);
   const [teaser, setTeaser] = useState("");
@@ -166,12 +168,15 @@ export function RankedTeamCard({ team, rank }: RankedTeamCardProps) {
       <div className="p-4 pt-4 min-h-[130px] flex flex-col">
         {/* Header */}
         <div className="flex items-start justify-between mb-2 gap-2">
-          <div className="min-w-0 flex-1">
-            <h3 className="text-[15px] font-semibold text-text-strong flex items-center gap-1.5 truncate">
-              {team.name}
-              <TrendIndicator trend={team.momentum.trend} />
-            </h3>
-            <span className="text-[10px] text-text-faint tracking-wide uppercase">{team.shortName}</span>
+          <div className="min-w-0 flex-1 flex items-center gap-2">
+            <TeamCrest teamCode={team.code} shortName={team.shortName} size={28} />
+            <div className="min-w-0">
+              <h3 className="text-[15px] font-semibold text-text-strong flex items-center gap-1.5 truncate">
+                {team.name}
+                <TrendIndicator trend={team.momentum.trend} />
+              </h3>
+              <span className="text-[10px] text-text-faint tracking-wide uppercase">{team.shortName}</span>
+            </div>
           </div>
           <NarrativeBadge label={team.momentum.label} size="sm" />
         </div>
@@ -311,7 +316,7 @@ export function RankedTeamCard({ team, rank }: RankedTeamCardProps) {
                 <div className="flex items-end justify-between">
                   {team.chips.length > 0 && (
                     <div className="flex-1">
-                      <ChipList chips={team.chips} max={2} />
+                      <ChipList chips={team.chips} max={maxChips} />
                     </div>
                   )}
                   {isMobile && (

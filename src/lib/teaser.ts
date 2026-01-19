@@ -3,7 +3,7 @@
 import type { TeamNormalized, MomentumLabel } from "@/lib/types";
 
 // Teaser templates by momentum label
-const TEASER_TEMPLATES: Record<MomentumLabel, string[]> = {
+const TEASER_TEMPLATES: Record<string, string[]> = {
   "On Fire": [
     "Absolutely flying right now",
     "Can't stop winning",
@@ -44,6 +44,18 @@ const TEASER_TEMPLATES: Record<MomentumLabel, string[]> = {
     "Up and down",
     "Hard to read",
   ],
+  "Watchlist": [
+    "One to watch",
+    "Keeping an eye on them",
+    "Interesting movements",
+    "Worth monitoring",
+  ],
+  "Stable": [
+    "Steady as she goes",
+    "Holding firm",
+    "Consistent performance",
+    "No drama here",
+  ]
 };
 
 // Chip-based modifiers to add secondary context

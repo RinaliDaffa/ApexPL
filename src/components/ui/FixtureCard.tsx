@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { motion } from "framer-motion";
 import type { FixtureNormalized } from "@/lib/types";
 import { resolveFixtureNarrative, getTagStyles } from "@/lib/fixtureNarrative";
+import { TeamCrest } from "./TeamCrest";
 
 interface FixtureCardProps {
   fixture: FixtureNormalized;
@@ -103,11 +104,24 @@ export function FixtureCard({ fixture }: FixtureCardProps) {
       aria-label={`${homeTeam.shortName} vs ${awayTeam.shortName}, ${formattedKickoff}. ${narrative.primary}. ${deltaText}. Click to view match details.`}
     >
       <div className="p-4 flex flex-col h-full">
-        {/* Row 1: Teams + Status */}
+        {/* Row 1: Teams with Crests + Status */}
         <div className="flex items-center justify-between mb-1">
-          <h3 className="text-[15px] font-bold text-text-strong">
-            {homeTeam.shortName} vs {awayTeam.shortName}
-          </h3>
+          <div className="flex items-center gap-3">
+            {/* Home Team */}
+            <div className="flex items-center gap-1.5">
+              <TeamCrest teamCode={homeTeam.code} shortName={homeTeam.shortName} size={24} />
+              <span className="text-[14px] font-bold text-text-strong">{homeTeam.shortName}</span>
+            </div>
+            
+            <span className="text-text-muted text-[12px]">vs</span>
+            
+            {/* Away Team */}
+            <div className="flex items-center gap-1.5">
+              <TeamCrest teamCode={awayTeam.code} shortName={awayTeam.shortName} size={24} />
+              <span className="text-[14px] font-bold text-text-strong">{awayTeam.shortName}</span>
+            </div>
+          </div>
+          
           <div className="flex items-center gap-2">
             <span
               className={`

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import type { PlayerNormalized, PlayerPosition } from "@/lib/types";
 import { ChipList } from "./ChipList";
@@ -101,12 +102,16 @@ export function PlayerInsightCard({
   index,
 }: PlayerInsightCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { selectPlayer, isSelected, canSelect } = useCompareSelection();
+  const { selectPlayer, selectedA, selectedB } = useCompareSelection();
 
-  const selected = isSelected(player.id);
-  const selectionDisabled = !canSelect() && !selected;
+  // Check if this player is A or B
+  const isPlayerA = selectedA?.id === player.id;
+  const isPlayerB = selectedB?.id === player.id;
+  const isSelected = isPlayerA || isPlayerB;
 
-  const handleClick = useCallback(() => {
+  const handleCompareClick = useCallback((e: React.MouseEvent | React.KeyboardEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     selectPlayer({
       id: player.id,
       name: player.name,
@@ -115,24 +120,17 @@ export function PlayerInsightCard({
     });
   }, [selectPlayer, player]);
 
+  const handleCompareKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      handleCompareClick(e);
+    }
+  }, [handleCompareClick]);
+
   const handleExpand = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     setIsExpanded((prev) => !prev);
   }, []);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        if (e.shiftKey) {
-          setIsExpanded((prev) => !prev);
-        } else {
-          handleClick();
-        }
-      }
-    },
-    [handleClick]
-  );
 
   // Generate a simple teaser from tags
   const teaser = player.tags.length > 0 
@@ -144,130 +142,156 @@ export function PlayerInsightCard({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25, delay: 0.05 + index * 0.025 }}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="button"
-      aria-pressed={selected}
-      aria-label={`${player.name}, ${player.position}. ${selected ? "Selected" : "Not selected"}. Press to ${selected ? "deselect" : "select"}.`}
-      className={`
-        relative cursor-pointer select-none
-        bg-bg-1/95 backdrop-blur-sm
-        rounded-[12px] border
-        shadow-[0_3px_12px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.02)]
-        transition-all duration-200 ease-out
-        hover:bg-bg-2/95
-        hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)]
-        hover:-translate-y-0.5
-        focus-visible:ring-2 focus-visible:ring-accent-mint focus-visible:ring-offset-2 focus-visible:ring-offset-bg-0
-        ${selected 
-          ? "border-accent-mint/50 shadow-[0_0_16px_rgba(0,255,135,0.15),inset_0_1px_0_rgba(0,255,135,0.1)]" 
-          : "border-white/[0.04] hover:border-white/[0.08]"
-        }
-        ${selectionDisabled ? "opacity-60 cursor-not-allowed" : ""}
-      `}
+      className="relative"
     >
-      {/* Selected indicator */}
-      {selected && (
-        <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded bg-accent-mint/20 text-accent-mint text-[8px] font-semibold">
-          <svg className="w-2.5 h-2.5" viewBox="0 0 12 12" fill="none">
-            <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Selected
-        </div>
-      )}
-
-      <div className="p-4">
-        {/* Header */}
-        <div className="flex items-start gap-2 mb-2">
-          <div className="flex-1 min-w-0">
-            <h4 className="text-[14px] font-semibold text-text-strong truncate">{player.name}</h4>
-            <div className="flex items-center gap-2 mt-1">
-              <PositionPill position={player.position} />
-              <span className="text-[10px] text-text-faint">{player.teamShortName}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Tags */}
-        {player.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-2">
-            {player.tags.slice(0, 2).map((tag) => (
-              <span
-                key={tag}
-                className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-text-muted border border-white/[0.06]"
-              >
-                {tag}
-              </span>
-            ))}
+      <Link
+        href={`/players/${player.id}`}
+        aria-label={`View details for ${player.name}, ${player.position}`}
+        className={`
+          block cursor-pointer select-none
+          bg-bg-1/95 backdrop-blur-sm
+          rounded-[12px] border
+          shadow-[0_3px_12px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.02)]
+          transition-all duration-200 ease-out
+          hover:bg-bg-2/95
+          hover:shadow-[0_6px_20px_rgba(0,0,0,0.25)]
+          hover:-translate-y-0.5
+          focus-visible:ring-2 focus-visible:ring-accent-mint focus-visible:ring-offset-2 focus-visible:ring-offset-bg-0
+          ${isSelected 
+            ? isPlayerA
+              ? "border-accent-mint/50 shadow-[0_0_16px_rgba(0,255,135,0.15)]" 
+              : "border-highlight-pink/50 shadow-[0_0_16px_rgba(255,107,157,0.15)]"
+            : "border-white/[0.04] hover:border-white/[0.08]"
+          }
+        `}
+      >
+        {/* A/B marker */}
+        {isSelected && (
+          <div className={`
+            absolute top-2 left-2 
+            w-5 h-5 rounded-full flex items-center justify-center
+            text-[10px] font-bold z-10
+            ${isPlayerA ? "bg-accent-mint text-bg-0" : "bg-highlight-pink text-bg-0"}
+          `}>
+            {isPlayerA ? "A" : "B"}
           </div>
         )}
 
-        {/* Teaser with fade */}
-        <p
-          className="text-[12px] text-text-muted mb-3"
-          style={{
-            display: "-webkit-box",
-            WebkitLineClamp: 1,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            maskImage: "linear-gradient(to right, black 80%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to right, black 80%, transparent 100%)",
-          }}
+        {/* Compare button (top-right) */}
+        <button
+          onClick={handleCompareClick}
+          onKeyDown={handleCompareKeyDown}
+          className={`
+            absolute top-2 right-2 z-10
+            w-6 h-6 rounded-full flex items-center justify-center
+            text-[12px] font-bold
+            transition-all duration-150
+            focus-visible:ring-2 focus-visible:ring-accent-mint focus-visible:ring-offset-1 focus-visible:ring-offset-bg-1
+            ${isSelected
+              ? isPlayerA
+                ? "bg-accent-mint text-bg-0 hover:bg-accent-mint/80"
+                : "bg-highlight-pink text-bg-0 hover:bg-highlight-pink/80"
+              : "bg-white/10 text-text-muted hover:bg-accent-mint/20 hover:text-accent-mint border border-white/10 hover:border-accent-mint/30"
+            }
+          `}
+          aria-label={isSelected ? `Remove ${player.name} from compare` : `Add ${player.name} to compare`}
+          title={isSelected ? "Remove from compare" : "+ Compare"}
         >
-          {teaser}
-        </p>
+          {isSelected ? "✓" : "+"}
+        </button>
 
-        {/* Bottom row: ambient signal + expand */}
-        <div className="flex items-end justify-between">
-          <MiniRadarHint features={player.features} />
-          <button
-            onClick={handleExpand}
-            className="text-[9px] text-text-faint hover:text-text-muted transition-colors px-2 py-1 -mr-2 -mb-1"
-            aria-expanded={isExpanded}
+        <div className="p-4">
+          {/* Header */}
+          <div className="flex items-start gap-2 mb-2 pr-8">
+            <div className="flex-1 min-w-0">
+              <h4 className="text-[14px] font-semibold text-text-strong truncate">{player.name}</h4>
+              <div className="flex items-center gap-2 mt-1">
+                <PositionPill position={player.position} />
+                <span className="text-[10px] text-text-faint">{player.teamShortName}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Tags */}
+          {player.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              {player.tags.slice(0, 2).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-text-muted border border-white/[0.06]"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Teaser with fade */}
+          <p
+            className="text-[12px] text-text-muted mb-3"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              maskImage: "linear-gradient(to right, black 80%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to right, black 80%, transparent 100%)",
+            }}
           >
-            {isExpanded ? "Less" : "More"}
-          </button>
-        </div>
+            {teaser}
+          </p>
 
-        {/* Expanded content */}
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="overflow-hidden"
+          {/* Bottom row: ambient signal + expand */}
+          <div className="flex items-end justify-between">
+            <MiniRadarHint features={player.features} />
+            <button
+              onClick={handleExpand}
+              className="text-[9px] text-text-faint hover:text-text-muted transition-colors px-2 py-1 -mr-2 -mb-1"
+              aria-expanded={isExpanded}
             >
-              <div className="pt-3 mt-3 border-t border-white/[0.06]">
-                {/* Chips */}
-                {player.chips.length > 0 && (
-                  <div className="mb-3">
-                    <ChipList chips={player.chips} max={2} />
-                  </div>
-                )}
+              {isExpanded ? "Less" : "More"}
+            </button>
+          </div>
 
-                {/* Mini stats */}
-                <div className="flex items-center gap-4 text-[10px]">
-                  <div>
-                    <span className="text-text-faint">Threat</span>
-                    <span className="ml-1 text-text-strong font-mono">{player.features.threat}</span>
-                  </div>
-                  <div>
-                    <span className="text-text-faint">Form</span>
-                    <span className="ml-1 text-text-strong font-mono">{player.features.form}</span>
-                  </div>
-                  <div>
-                    <span className="text-text-faint">Hype</span>
-                    <span className="ml-1 text-text-strong font-mono">{player.hype.score}</span>
+          {/* Expanded content */}
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="pt-3 mt-3 border-t border-white/[0.06]">
+                  {/* Chips */}
+                  {player.chips.length > 0 && (
+                    <div className="mb-3">
+                      <ChipList chips={player.chips} max={2} />
+                    </div>
+                  )}
+
+                  {/* Mini stats */}
+                  <div className="flex items-center gap-4 text-[10px]">
+                    <div>
+                      <span className="text-text-faint">Threat</span>
+                      <span className="ml-1 text-text-strong font-mono">{player.features.threat}</span>
+                    </div>
+                    <div>
+                      <span className="text-text-faint">Form</span>
+                      <span className="ml-1 text-text-strong font-mono">{player.features.form}</span>
+                    </div>
+                    <div>
+                      <span className="text-text-faint">Hype</span>
+                      <span className="ml-1 text-text-strong font-mono">{player.hype.score}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </Link>
     </motion.div>
   );
 }

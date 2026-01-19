@@ -1,0 +1,22 @@
+﻿src/app/api/player/[id]/route.ts(73,3): error TS6133: 'request' is declared but its value is never read.
+src/app/matchday/[id]/page.tsx(5,15): error TS6196: 'FixtureNormalized' is declared but never used.
+src/app/matchday/[id]/page.tsx(230,27): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/app/matchday/[id]/page.tsx(231,25): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/app/matchday/[id]/page.tsx(245,29): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/app/matchday/[id]/page.tsx(249,34): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/app/players/[id]/page.tsx(150,9): error TS6133: 'router' is declared but its value is never read.
+src/app/players/[id]/page.tsx(258,57): error TS2322: Type '{ timestamp: string; className: string; }' is not assignable to type 'IntrinsicAttributes & LastUpdatedProps'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & LastUpdatedProps'.
+src/components/ui/FixtureDetailPanel.tsx(196,43): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/components/ui/FixtureDetailPanel.tsx(197,41): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/components/ui/FixtureDetailPanel.tsx(198,29): error TS2345: Argument of type 'number | null' is not assignable to parameter of type 'number'.
+  Type 'null' is not assignable to type 'number'.
+src/lib/server/playerResolver.ts(17,3): error TS6196: 'WikidataCandidate' is declared but never used.
+src/lib/server/playerResolver.ts(25,3): error TS6133: 'normalizeName' is declared but its value is never read.
+src/lib/server/wikidata.ts(28,7): error TS6133: 'QIDS' is declared but its value is never read.

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import type { MomentumLabel } from "@/lib/types";
 
 interface NarrativeBadgeProps {
-  label: MomentumLabel;
+  label: MomentumLabel | string;
   size?: "sm" | "md";
 }
 
@@ -31,8 +31,15 @@ const BADGE_STYLES: Record<MomentumLabel, { bg: string; text: string; glow: stri
   },
 };
 
+const DEFAULT_STYLE = {
+  bg: "bg-white/5",
+  text: "text-text-muted",
+  glow: "",
+};
+
 export function NarrativeBadge({ label, size = "md" }: NarrativeBadgeProps) {
-  const styles = BADGE_STYLES[label];
+  // @ts-ignore - allow arbitrary strings for neutral fallbacks
+  const styles = BADGE_STYLES[label] || DEFAULT_STYLE;
   const sizeClasses = size === "sm" ? "px-2 py-0.5 text-[10px]" : "px-3 py-1 text-xs";
 
   return (
@@ -55,7 +62,8 @@ export function NarrativeBadge({ label, size = "md" }: NarrativeBadgeProps) {
   );
 }
 
-function StatusIcon({ label }: { label: MomentumLabel }) {
+function StatusIcon({ label }: { label: string }) {
+  // @ts-ignore
   switch (label) {
     case "On Fire":
       return <span className="text-sm">🔥</span>;
@@ -65,5 +73,7 @@ function StatusIcon({ label }: { label: MomentumLabel }) {
       return <span className="text-sm">❄️</span>;
     case "Unstable":
       return <span className="text-sm">⚡</span>;
+    default:
+      return <span className="text-sm">●</span>;
   }
 }

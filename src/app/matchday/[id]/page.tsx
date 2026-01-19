@@ -5,6 +5,7 @@ import { normalizeTeams, normalizePlayers, normalizeFixtures } from "@/lib/serve
 import type { FixtureNormalized, PlayerNormalized, TeamNormalized } from "@/lib/types";
 import { resolveFixtureNarrative, getTagStyles } from "@/lib/fixtureNarrative";
 import { MatchDetailClient } from "./client";
+import { TeamCrest } from "@/components/ui";
 
 // Derive "What to Watch" bullets (pre-match) — max 3, specific but not predictive
 function deriveWhatToWatch(homeMomentum: number, awayMomentum: number): string[] {
@@ -287,11 +288,23 @@ export default async function MatchFocusPage({ params }: PageProps) {
 
       {/* Header Card */}
       <section className="card p-5 md:p-6 mb-4">
-        {/* Top row: Matchup + LastUpdated */}
+        {/* Top row: Matchup with Crests + LastUpdated */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
-          <h1 className="text-2xl md:text-3xl font-bold text-text-strong">
-            {fixture.homeTeam.shortName} vs {fixture.awayTeam.shortName}
-          </h1>
+          <div className="flex items-center gap-4">
+            {/* Home Team */}
+            <div className="flex items-center gap-2">
+              <TeamCrest teamCode={fixture.homeTeam.code} shortName={fixture.homeTeam.shortName} size={40} />
+              <span className="text-2xl md:text-3xl font-bold text-text-strong">{fixture.homeTeam.shortName}</span>
+            </div>
+            
+            <span className="text-text-muted text-xl">vs</span>
+            
+            {/* Away Team */}
+            <div className="flex items-center gap-2">
+              <TeamCrest teamCode={fixture.awayTeam.code} shortName={fixture.awayTeam.shortName} size={40} />
+              <span className="text-2xl md:text-3xl font-bold text-text-strong">{fixture.awayTeam.shortName}</span>
+            </div>
+          </div>
           
           {/* LastUpdated */}
           <div className="flex items-center gap-2 text-xs text-text-muted">
