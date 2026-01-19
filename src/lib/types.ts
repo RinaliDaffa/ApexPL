@@ -17,7 +17,7 @@ export interface ApiResponse<T> {
 }
 
 // Team Types
-export type MomentumLabel = "On Fire" | "Rising" | "Cooling" | "Unstable";
+export type MomentumLabel = "On Fire" | "Rising" | "Cooling" | "Unstable" | "Watchlist" | "Stable";
 export type TrendDirection = "up" | "down" | "flat";
 
 export interface TeamMomentum {
