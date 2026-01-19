@@ -28,6 +28,7 @@ export interface TeamMomentum {
 
 export interface TeamNormalized {
   id: number;
+  code: number; // FPL team.code for crest URLs
   name: string;
   shortName: string;
   momentum: TeamMomentum;
@@ -63,7 +64,9 @@ export interface PlayerFeatures {
 export interface PlayerNormalized {
   id: number;
   name: string;
+  photo: string | null; // FPL photo code (e.g., "123456.jpg")
   teamId: number;
+  teamCode: number;
   teamShortName: string;
   position: PlayerPosition;
   tags: PlayerTag[];
@@ -94,6 +97,7 @@ export type NarrativeTag =
 
 export interface FixtureTeam {
   id: number;
+  code: number; // FPL team.code for crest URLs
   shortName: string;
 }
 

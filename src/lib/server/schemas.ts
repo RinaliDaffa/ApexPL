@@ -20,6 +20,7 @@ export const FplEventSchema = z.object({
 
 export const FplTeamSchema = z.object({
   id: z.number(),
+  code: z.number(), // FPL team code for crest URLs
   name: z.string(),
   short_name: z.string(),
   strength: z.number().optional().default(3),
@@ -32,6 +33,7 @@ export const FplElementSchema = z.object({
   web_name: z.string(),
   first_name: z.string().optional().default(""),
   second_name: z.string().optional().default(""),
+  photo: z.string().optional(), // Official FPL photo code (e.g., "123456.jpg")
   team: z.number(),
   element_type: z.number(),
   now_cost: z.number(),

@@ -6,7 +6,7 @@ import "server-only";
 import { Redis } from "@upstash/redis";
 
 // Cache version prefix for invalidation
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v3"; // Bumped to include photo field in FPL data
 
 // Initialize Redis client lazily to avoid errors when not configured
 let redis: Redis | null = null;
@@ -34,6 +34,10 @@ export const CACHE_TTL = {
   TEAMS: 20 * 60, // 20 minutes
   PLAYERS: 30 * 60, // 30 minutes
   COMPARE: 20 * 60, // 20 minutes
+  // Wikidata player profiles (long TTLs to minimize API calls)
+  TEAM_SQUAD: 14 * 24 * 60 * 60, // 14 days (Wikidata team squad)
+  PLAYER_MAPPING: 180 * 24 * 60 * 60, // 180 days (FPL ID → Wikidata QID)
+  PLAYER_PROFILE: 90 * 24 * 60 * 60, // 90 days (Wikidata profile data)
 } as const;
 
 // Versioned cache keys
@@ -56,6 +60,10 @@ export const CACHE_KEYS = {
   // Raw normalized players (pre-filter, used as base)
   PLAYERS_BASE: `apexpl:${CACHE_VERSION}:players:base`,
   COMPARE: (a: number, b: number) => `apexpl:${CACHE_VERSION}:compare:${Math.min(a, b)}-${Math.max(a, b)}`,
+  // Wikidata player profiles
+  TEAM_SQUAD: (teamId: number) => `apexpl:${CACHE_VERSION}:wd:team-squad:${teamId}`,
+  PLAYER_MAPPING: (fplId: number) => `apexpl:${CACHE_VERSION}:wd:player-qid:${fplId}`,
+  PLAYER_PROFILE: (qid: string) => `apexpl:${CACHE_VERSION}:wd:player-profile:${qid}`,
 } as const;
 
 export interface CacheResult<T> {

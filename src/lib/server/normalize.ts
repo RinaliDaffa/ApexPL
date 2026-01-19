@@ -134,6 +134,7 @@ export function normalizeTeams(
 
     teams.push({
       id: fplTeam.id,
+      code: fplTeam.code, // FPL team.code for crest URLs
       name: fplTeam.name,
       shortName: fplTeam.short_name,
       momentum: {
@@ -205,7 +206,9 @@ export function normalizePlayers(bootstrap: FplBootstrapStatic): PlayerNormalize
     return {
       id: element.id,
       name: element.web_name,
+      photo: element.photo ?? null, // FPL photo code (e.g., "123456.jpg")
       teamId: element.team,
+      teamCode: team?.code ?? 0,
       teamShortName: team?.short_name ?? "???",
       position: POSITION_MAP[element.element_type] ?? "MID",
       tags,
@@ -275,10 +278,12 @@ export function normalizeFixtures(
         awayScore: fixture.team_a_score ?? undefined,
         homeTeam: {
           id: fixture.team_h,
+          code: homeTeam?.code ?? 0, // FPL team.code for crest URLs
           shortName: homeTeam?.shortName ?? "???",
         },
         awayTeam: {
           id: fixture.team_a,
+          code: awayTeam?.code ?? 0, // FPL team.code for crest URLs
           shortName: awayTeam?.shortName ?? "???",
         },
         momentumContrast: {
