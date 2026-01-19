@@ -24,11 +24,7 @@ const PROPS = {
   MEMBER_OF_SPORTS_TEAM: "P54",
 } as const;
 
-// Wikidata QIDs for filtering
-const QIDS = {
-  HUMAN: "Q5",
-  FOOTBALL_PLAYER: "Q937857",
-} as const;
+// QIDS removed as they are hardcoded in SPARQL string
 
 /**
  * Normalize name for comparison (lowercase, remove diacritics, trim)
