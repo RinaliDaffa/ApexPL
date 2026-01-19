@@ -223,8 +223,8 @@ export default async function MatchFocusPage({ params }: PageProps) {
 
   // Derive bullets based on match status
   const isFinished = fixture.finished;
-  const homeMomentum = fixture.momentumContrast.homeScore;
-  const awayMomentum = fixture.momentumContrast.awayScore;
+  const homeMomentum = fixture.momentumContrast.homeScore ?? 0;
+  const awayMomentum = fixture.momentumContrast.awayScore ?? 0;
 
   const bullets = isFinished
     ? deriveWhatDecidedIt(homeMomentum, awayMomentum, fixture.homeTeam.shortName, fixture.awayTeam.shortName)
