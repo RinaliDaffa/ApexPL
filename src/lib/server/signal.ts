@@ -141,26 +141,7 @@ function findTrap(fixtures: FplFixture[], teams: TeamNormalized[]): SignalItem |
 // Momentum Signal Strategies (Fallback)
 // -----------------------------------------------------------------------------
 
-function findRiser(teams: TeamNormalized[]): SignalItem | null {
-  // We need delta. Currently TeamNormalized doesn't have explicit delta.
-  // Assuming 'momentum.trend' or checking 'spark.lastN'.
-  // Let's use spark for now: last score vs avg?
-  // User prompt said "Use momentum deltas (if you track)".
-  // If not tracked, we might not have it.
-  // Fallback: Just pick "On Fire" team.
-  
-  const best = [...teams].sort((a, b) => b.momentum.score - a.momentum.score)[0];
-  if (!best) return null;
-  
-  return {
-    kind: "riser",
-    title: "Leader",
-    subtitle: best.name,
-    href: `/players?team=${best.id}`, // User said /teams/ID, but let's safely route to players filtered if teams page logic is complex. 
-    // Wait, user requested /teams/[id] specifically. I'll use /teams/[id] as per instructions, but I verified /teams/[id] exists.
-    deltaLabel: "Top Momentum",
-  };
-}
+// findRiser removed as logic is inlined in getWeeklySignals
 
 // -----------------------------------------------------------------------------
 // Main Generator

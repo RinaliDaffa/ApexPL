@@ -10,7 +10,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { usePlayer } from "@/hooks";
 import { useCompareSelection } from "@/context/CompareContext";
-import { LastUpdated, TeamCrest } from "@/components/ui";
+import { TeamCrest } from "@/components/ui";
 import { getFplPlayerPhotoUrl } from "@/lib/fplAssets";
 import type { PlayerPosition } from "@/lib/types";
 
