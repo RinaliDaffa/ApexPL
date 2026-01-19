@@ -1,6 +1,6 @@
 "use client";
 
-import type { TeamNormalized, MomentumLabel } from "@/lib/types";
+import type { TeamNormalized } from "@/lib/types";
 
 // Teaser templates by momentum label
 const TEASER_TEMPLATES: Record<string, string[]> = {
