@@ -69,7 +69,7 @@ export function SignalStrip({ teams }: SignalStripProps) {
           resolved: identity
         });
 
-        const crestUrl = identity.crestUrl;
+        // const crestUrl = identity.crestUrl; // Unused
 
         return (
             <div 
