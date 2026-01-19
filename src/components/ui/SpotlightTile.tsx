@@ -23,7 +23,7 @@ export function SpotlightTile({ team }: SpotlightTileProps) {
     resolved: identity
   });
 
-  const { crestUrl } = identity;
+  // const { crestUrl } = identity; // Removed unused destructuring
 
   return (
     <div className="mb-8 relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-bg-1 to-bg-0 shadow-2xl">
