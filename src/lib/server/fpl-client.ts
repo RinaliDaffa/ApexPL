@@ -28,6 +28,23 @@ export type FplEvent = FplBootstrapStaticValidated["events"][0];
 // Fetch with Retry + Validation
 // -----------------------------------------------------------------------------
 
+// Helper to timeout a promise
+async function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  let timer: NodeJS.Timeout;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`Request timed out after ${ms}ms`)), ms);
+  });
+  
+  try {
+    const result = await Promise.race([promise, timeoutPromise]);
+    clearTimeout(timer!);
+    return result;
+  } catch (error) {
+    clearTimeout(timer!);
+    throw error;
+  }
+}
+
 async function fetchWithRetry<T>(
   url: string,
   schema: { parse: (data: unknown) => T },
@@ -37,10 +54,14 @@ async function fetchWithRetry<T>(
 
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
-      const response = await fetch(url, {
-        headers: { "User-Agent": "ApexPL/1.0" },
-        cache: "no-store", // Disable fetch cache, we use our own
-      });
+      // 5 second timeout for upstream requests
+      const response = await withTimeout(
+        fetch(url, {
+          headers: { "User-Agent": "ApexPL/1.0" },
+          cache: "no-store", // Disable fetch cache, we use our own
+        }),
+        5000 
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
