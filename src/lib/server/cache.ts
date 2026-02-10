@@ -82,6 +82,26 @@ export function isCacheConfigured(): boolean {
 // Fallback in-memory cache for local dev without Upstash
 const memoryCache = new Map<string, { data: unknown; timestamp: number }>();
 
+// Helper to timeout a promise
+async function withTimeout<T>(promise: Promise<T>, ms: number, opName: string): Promise<T> {
+  let timer: NodeJS.Timeout;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`Redis ${opName} timed out after ${ms}ms`)), ms);
+  });
+  
+  try {
+    const result = await Promise.race([promise, timeoutPromise]);
+    clearTimeout(timer!);
+    return result;
+  } catch (error) {
+    clearTimeout(timer!);
+    throw error;
+  }
+}
+
+// Timeout constants
+const REDIS_TIMEOUT_MS = 2000; // 2 seconds strict timeout
+
 /**
  * Get cached value with stale detection
  */
@@ -90,7 +110,13 @@ export async function cacheGet<T>(key: string, ttlSeconds: number): Promise<Cach
   
   if (client) {
     try {
-      const cached = await client.get<{ data: T; timestamp: number }>(key);
+      // Wrap Redis call in timeout
+      const cached = await withTimeout(
+        client.get<{ data: T; timestamp: number }>(key),
+        REDIS_TIMEOUT_MS,
+        "GET"
+      );
+      
       if (!cached) return null;
 
       const isStale = Date.now() - cached.timestamp > ttlSeconds * 1000;
@@ -123,7 +149,12 @@ export async function cacheSet<T>(key: string, data: T, ttlSeconds: number): Pro
   if (client) {
     try {
       // Store for 2x TTL to allow stale reads
-      await client.set(key, payload, { ex: ttlSeconds * 2 });
+      // We don't want SET to block the response too long if Redis is slow
+      await withTimeout(
+        client.set(key, payload, { ex: ttlSeconds * 2 }),
+        REDIS_TIMEOUT_MS, 
+        "SET"
+      );
       return;
     } catch (error) {
       console.error(`[Cache] SET error for ${key}:`, error);
