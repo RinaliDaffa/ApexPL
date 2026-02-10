@@ -83,8 +83,8 @@ export const FplFixtureSchema = z.object({
   team_h_score: z.number().nullable(),
   team_a_score: z.number().nullable(),
   finished: z.boolean(),
-  started: z.boolean().optional().default(false),
-  finished_provisional: z.boolean().optional().default(false),
+  started: z.boolean().nullable().optional().transform(val => val ?? false),
+  finished_provisional: z.boolean().nullable().optional().transform(val => val ?? false),
   team_h_difficulty: z.number().optional(),
   team_a_difficulty: z.number().optional(),
 });
