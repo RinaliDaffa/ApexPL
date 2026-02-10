@@ -215,11 +215,25 @@ docs/
 
 ## Screenshots
 
-> 📸 _Placeholder — add screenshots to `/public/screenshots/`_
 
-| Snapshot                                      | Players                                     | Matchday                                      |
-| --------------------------------------------- | ------------------------------------------- | --------------------------------------------- |
-| ![Snapshot](/public/screenshots/snapshot.png) | ![Players](/public/screenshots/players.png) | ![Matchday](/public/screenshots/matchday.png) |
+### Core Pages
+
+| Snapshot | Players | Matchday |
+| --- | --- | --- |
+| <img width="483" height="871" alt="Snapshot" src="https://github.com/user-attachments/assets/0eb3fd04-6d29-40ed-9c96-318afc312480" /> | <img width="478" height="385" alt="Players" src="https://github.com/user-attachments/assets/860ea9f1-a1fb-4e14-bab6-b305c9054a95" /> | <img width="454" height="568" alt="Matchday" src="https://github.com/user-attachments/assets/9d1f0122-dd22-49e1-9914-b34343a1ecf0" /> |
+
+### Detail Views
+
+| Team Detail | Player Detail | Match Detail |
+| --- | --- | --- |
+| <img width="447" height="392" alt="Team Detail" src="https://github.com/user-attachments/assets/9191900f-9ecc-428f-bb85-09a8ff33a11f" /> | <img width="318" height="299" alt="Player Detail" src="https://github.com/user-attachments/assets/2410873a-680e-4b15-bb39-d4fd37b8f832" /> | <img width="354" height="502" alt="Match Detail" src="https://github.com/user-attachments/assets/26995166-b3ea-4e74-bd59-0cb4aca7ff9e" /> |
+
+### Player Comparison
+
+| Compare |
+| --- |
+| <img width="783" height="854" alt="Player Comparison" src="https://github.com/user-attachments/assets/1cf62de8-d55f-4974-a281-44edb252ac4c" /> |
+
 
 ---
 
@@ -241,7 +255,3 @@ Data is sourced from publicly available FPL endpoints. All trademarks and team c
 Built with ❤️ for the PL community.
 
 ---
-
-## License
-
-MIT
