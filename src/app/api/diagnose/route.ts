@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Redis } from '@upstash/redis';
-import { fetchBootstrap } from '@/lib/server/fpl-client';
+
 
 export const dynamic = 'force-dynamic';
 
