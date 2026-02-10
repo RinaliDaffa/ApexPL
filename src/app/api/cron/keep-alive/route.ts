@@ -3,7 +3,7 @@ import { cacheSet } from '@/lib/server/cache';
 
 export const dynamic = 'force-dynamic'; // Ensure this route is not statically cached
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     // Check for authorization header if you want to secure this endpoint (optional for public cron)
     // const authHeader = request.headers.get('authorization');
